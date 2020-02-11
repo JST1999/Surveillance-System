@@ -17,7 +17,7 @@ app.use(function(req, res, next) {
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var sha256 = require('sha256');
 
 //one of my fav parts, this is a part for sending emails
@@ -44,7 +44,7 @@ var upload = multer({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+//app.use(cookieParser());
 
 app.use(express.static(__dirname));
 
@@ -207,7 +207,7 @@ app.post("/addimage", function(req, res) {
 
 //sends index.html
 app.get("/", function(request, response) {
-	response.render("admin");
+	response.render("index");//if the html file is callled index, you dont need a view engine. will move to one soon
 });
 
 // Run the server.
