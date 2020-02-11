@@ -21,18 +21,18 @@ var cookieParser = require('cookie-parser');
 var sha256 = require('sha256');
 
 //one of my fav parts, this is a part for sending emails
-var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'saywatt0@gmail.com',
-    pass: 'What are you looking at1'
-  }
-});
+// var nodemailer = require('nodemailer');
+// var transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'saywatt0@gmail.com',
+//     pass: 'What are you looking at1'
+//   }
+// });
 
 var Storage = multer.diskStorage({//used to help add images https://dzone.com/articles/upload-files-or-images-to-server-using-nodejs
 	destination: function(req, file, callback) {
-		callback(null, "./product-images");
+		callback(null, "./images");
 	},
 	filename: function(req, file, callback) {
 		callback(null, file.originalname);
