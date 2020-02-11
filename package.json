@@ -1,0 +1,30 @@
+{
+    "name": "saywatt",
+    "version": "1.0.0",
+    "engines": {
+        "node": "12.13.0"
+    },
+    "scripts": {
+        "start": "node express-server.js",
+        "test": "mocha --exit"
+    },
+    "dependencies": {
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "cookie-parser": "^1.4.4",
+        "express": "4.17.1",
+        "express-session": "^1.17.0",
+        "express-validator": "^6.3.0",
+        "mocha": "^6.2.2",
+        "mongoose": "5.7.13",
+        "morgan": "^1.9.1",
+        "multer": "^1.4.2",
+        "nodemailer": "^6.4.2",
+        "salted-sha256": "^1.0.0",
+        "sha256": "^0.2.0",
+        "should": "^13.2.3",
+        "websocket": "1.0.30"
+    },
+    "author": "Jason Tungay",
+    "license": "ISC"
+}
