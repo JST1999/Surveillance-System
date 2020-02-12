@@ -1,14 +1,13 @@
-var hashes = window.location.href;
-var url = hashes.substring(0, hashes.length - 10);//these 2 are so that the website can be on any host i.e. localhost, soft355.herokuapp.com
+var url = window.location.host;//these 2 are so that the website can be on any host i.e. localhost, soft355.herokuapp.com
 var sessionID;
 
 $(document).ready(function() {
     function getAdminDetails(){
-        var uri = url+"getadmindetails";
+        var uri = "http://"+url+"/getadmindetails";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) { 
-            window.location.replace("./items.html");
+            window.location.replace("./images.html");
         }).fail(function(xhr, status, error) {
             Cookies.remove('adminSessionID');
         });
@@ -26,14 +25,14 @@ $(document).ready(function() {
             $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
         } else{
             $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
-            var uri = url+"adminlogin";
+            var uri = "http://"+url+"/adminlogin";
             $.post(uri, {
                 username: username,
                 password: password
             }, function(data, status) {
                 Cookies.set('adminSessionID', data.message);
                 adminSessionID = Cookies.get("adminSessionID");//sanity check, make sure it works
-                window.location.replace("./items.html");
+                window.location.replace("./images.html");
             }).fail(function(xhr, status, error) {
                 $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid Credentials</p>");
             });

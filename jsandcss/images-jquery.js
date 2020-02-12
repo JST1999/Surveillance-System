@@ -1,48 +1,47 @@
-var hashes = window.location.href;
-var url = hashes.substring(0, hashes.length - 10);//these 2 are so that the website can be on any host i.e. localhost, soft355.herokuapp.com
+var url = window.location.host;//these 2 are so that the website can be on any host i.e. localhost, soft355.herokuapp.com
 var userDetails;
 var sessionID = null;
 
 $(document).ready(function() {
     function getAdminDetails(){
-        var uri = url+"getadmindetails";
+        var uri = "http://"+url+"/getadmindetails";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) { 
             userDetails = data;
         }).fail(function(xhr, status, error) {
             Cookies.remove('adminSessionID');
-            window.location.replace("./admin.html");
+            window.location.replace("./");
         });
     }
     sessionID = Cookies.get('adminSessionID');
     if(sessionID){
         getAdminDetails();
     } else{
-        window.location.replace("./admin.html");
+        window.location.replace("./");
     }
 
 
     $("#logoutBTN").click( function(e){
         e.preventDefault();
-        var uri = url+"logout";
+        var uri = "http://"+url+"/logout";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) {
             Cookies.remove('adminSessionID');
-            window.location.replace("./admin.html");
+            window.location.replace("./");
         }).fail(function(xhr, status, error) {
             
         });
     });
     $("#logoutBTNslicknav").click( function(e){
         e.preventDefault();
-        var uri = url+"logout";
+        var uri = "http://"+url+"/logout";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) {
             Cookies.remove('adminSessionID');
-            window.location.replace("./admin.html");
+            window.location.replace("./");
         }).fail(function(xhr, status, error) {
            
         });
