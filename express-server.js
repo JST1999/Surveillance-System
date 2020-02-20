@@ -20,6 +20,12 @@ var upload = multer();
 //var cookieParser = require('cookie-parser');
 var sha256 = require('sha256');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(cookieParser());
+
+app.use(express.static(__dirname));
+
 //one of my fav parts, this is a part for sending emails
 // var nodemailer = require('nodemailer');
 // var transporter = nodemailer.createTransport({
@@ -42,11 +48,14 @@ var upload = multer({
 	storage: Storage
 }).array("imgUploader", 3); //Field name and max count
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(cookieParser());
-
-app.use(express.static(__dirname));
+app.post("/addimage", function(req, res) {
+	upload(req, res, function(err) {
+		if (err) {
+			return res.end("Something went wrong!");
+		}
+		return res.end("File uploaded sucessfully!");
+	});
+});
 
 // app.get("/listitems", function(request, response) {
 // 	// Find all items.
@@ -153,14 +162,6 @@ app.post("/getadmindetails", function(req, res){
 	});
 });
 
-app.post("/addimage", function(req, res) {
-	upload(req, res, function(err) {
-		if (err) {
-			return res.end("Something went wrong!");
-		}
-		return res.end("File uploaded sucessfully!");
-	});
-});
 
 // var WebSocketServer = require('websocket').server;
 // var http = require('http');
