@@ -1,4 +1,4 @@
-var url = window.location.host;//these 2 are so that the website can be on any host i.e. localhost, soft355.herokuapp.com
+var url = window.location.host;//these 2 are so that the website can be on any host i.e. localhost, surv-system.herokuapp.com
 var sessionID;
 
 $(document).ready(function() {
