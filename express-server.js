@@ -41,7 +41,29 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 		callback(null, "./images");
 	},
 	filename: function(req, file, callback) {
-		callback(null, file.originalname);
+		var name = file.originalname;
+
+		var d = new Date();
+		var year = d.getFullYear();
+		var month = d.getMonth() + 1;//jan is month 0
+		var day = d.getDate();
+		var hour = d.getHours();
+
+		var Image = new schemas.Image({
+			"filename": name,
+			"year": year,
+			"month": month,
+			"day": day,
+			"hour": hour,
+		});
+		Image.save().then((test) => {
+			res.status("200");
+			res.json({
+				message: "Added successfully"
+			});
+		});
+
+		callback(null, name);
 	}
 });//also, another one of my fav features
 var upload = multer({
@@ -56,31 +78,6 @@ app.post("/addimage", function(req, res) {
 		return res.end("File uploaded sucessfully!");
 	});
 });
-
-// app.get("/listitems", function(request, response) {
-// 	// Find all items.
-// 	schemas.Item.find(function(err, items) {
-// 		// Set the response header to indicate JSON content
-// 		// and return the array of Card data.
-// 		response.setHeader("Content-Type", "application/json");
-// 		response.send(items);
-// 	});
-// });
-
-// app.get("/item/:id", function (request, response) {
-// 	schemas.Item.findOne({"_id": request.params.id}, function(err, item) {
-// 		response.setHeader("Content-Type", "application/json");
-// 		response.send(item);
-// 	});
-// });
-
-// app.get("/searchitems/:querystr", function (request, response) {
-// 	var query = request.params.querystr;//can also do "/"+querystr+"/gi"
-// 	schemas.Item.find({"name": {$regex:query,$options:"$gi"}}, function(err, item) {
-// 		response.setHeader("Content-Type", "application/json");
-// 		response.send(item);
-// 	});
-// });
 
 function createHash(password, salt){//as a function so i can run tests - also so signup and login can use it - also sessionID uses it to make itself longer and unique and 'random'
 	return sha256.x2(password+salt);//one of my fav parts - x2 means that it is double hashed
@@ -161,50 +158,6 @@ app.post("/getadmindetails", function(req, res){
 		}
 	});
 });
-
-
-// var WebSocketServer = require('websocket').server;
-// var http = require('http');
-// var server = http.createServer(function(request, response) {
-//     console.log((new Date()) + ' Received request for ' + request.url);
-//     response.writeHead(404);
-//     response.end();
-// });
-// server.listen(9000, function() {
-//     console.log((new Date()) + 'Server is listening on port 9000');
-// });
-// wsServer = new WebSocketServer({
-//     httpServer: server,
-//     // You should not use autoAcceptConnections for production
-//     // applications, as it defeats all standard cross-origin protection
-//     // facilities built into the protocol and the browser.  You should
-//     // *always* verify the connection's origin and decide whether or not
-//     // to accept it.
-//     autoAcceptConnections: false
-// });
-// function originIsAllowed(origin) {
-//   // put logic here to detect whether the specified origin is allowed.
-//   return true;
-// }
-// wsServer.on('request', function(request) {
-//     if (!originIsAllowed(request.origin)) {
-//       // Make sure we only accept requests from an allowed origin
-//       request.reject();
-//       console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
-//       return;
-//     }
-    
-//     var connection = request.accept(null, request.origin);
-//     console.log((new Date()) + ' Connection accepted.');
-// 	const changeStream = schemas.Order.watch();
-// 	changeStream.on('change', next => {
-// 		console.log("New change in order collection")
-// 		connection.sendUTF("change");
-// 	});
-//     connection.on('close', function(reasonCode, description) {
-//         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-//     });
-// });
 
 //sends index.html
 app.get("/", function(request, response) {

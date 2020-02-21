@@ -14,3 +14,12 @@ var Admin = mongoose.model("Admin", {//admins in database
 	salt: String
 });
 module.exports.Admin = Admin;
+
+var Image = mongoose.model("Image", {//images in database
+	filename: String,
+	year: Number,
+	month: Number,
+	day: Number,
+	hour: Number
+});
+module.exports.Image = Image;
