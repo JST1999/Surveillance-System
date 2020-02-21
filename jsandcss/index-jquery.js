@@ -1,9 +1,12 @@
 var url = window.location.host;//these 2 are so that the website can be on any host i.e. localhost, surv-system.herokuapp.com
 var sessionID;
 
+var protocol = "https://";//for heroku deployment
+//var protocol = "http://";//for localhost
+
 $(document).ready(function() {
     function getAdminDetails(){
-        var uri = "http://"+url+"/getadmindetails";
+        var uri = protocol+url+"/getadmindetails";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) { 
@@ -25,7 +28,7 @@ $(document).ready(function() {
             $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
         } else{
             $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
-            var uri = "http://"+url+"/adminlogin";
+            var uri = protocol+url+"/adminlogin";
             $.post(uri, {
                 username: username,
                 password: password

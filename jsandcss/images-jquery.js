@@ -2,9 +2,12 @@ var url = window.location.host;//these 2 are so that the website can be on any h
 var userDetails;
 var sessionID = null;
 
+var protocol = "https://";//for heroku deployment
+//var protocol = "http://";//for localhost
+
 $(document).ready(function() {
     function getAdminDetails(){
-        var uri = "http://"+url+"/getadmindetails";
+        var uri = protocol+url+"/getadmindetails";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) { 
@@ -24,7 +27,7 @@ $(document).ready(function() {
 
     $("#logoutBTN").click( function(e){
         e.preventDefault();
-        var uri = "http://"+url+"/logout";
+        var uri = protocol+url+"/logout";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) {
@@ -36,7 +39,7 @@ $(document).ready(function() {
     });
     $("#logoutBTNslicknav").click( function(e){
         e.preventDefault();
-        var uri = "http://"+url+"/logout";
+        var uri = protocol+url+"/logout";
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) {
@@ -49,7 +52,7 @@ $(document).ready(function() {
 
 
     function getMostRecent(){  //gets the url and does a get request
-        var uri = "http://"+url+"/getmostrecent";
+        var uri = protocol+url+"/getmostrecent";
         $.get(uri, {}, function(res) {
             appendText(res);
         });
