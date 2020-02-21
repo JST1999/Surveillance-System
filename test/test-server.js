@@ -13,7 +13,7 @@ var should = chai.should();//vs code says it isnt used, but it is
 describe('Hashing', function() {
     it('should generate hashes correctly', function(done) {
       this.timeout(20000);
-      setTimeout(done, 20000);
+      setTimeout(done, 20000);//my parents internet on my laptop does this test at around 5000-9000ms
       var password = "password123";
       var salt = createSalt();
       var hash = createHash(password, salt);
@@ -73,4 +73,25 @@ describe('User', function() {
           done();
         });
     });
+});
+
+describe('Image', function() {
+  it('should list ALL items on /getmostrecent GET', function(done) {
+    this.timeout(20000);
+    setTimeout(done, 20000);
+    chai.request(server)
+      .get('/getmostrecent')
+      .end(function(err, res){
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.be.a('array');
+        res.body[0].should.have.property('_id');
+        res.body[0].should.have.property('filename');
+        res.body[0].should.have.property('year');
+        res.body[0].should.have.property('month');
+        res.body[0].should.have.property('day');
+        res.body[0].should.have.property('hour');
+        done();
+      });
+  });
 });

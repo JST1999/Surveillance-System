@@ -159,6 +159,13 @@ app.post("/getadmindetails", function(req, res){
 	});
 });
 
+app.get("/getmostrecent", function (request, response) {//gets most recent 50 images
+	schemas.Image.find(function(err, images) {
+		response.setHeader("Content-Type", "application/json");
+		response.send(images);
+	}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
+});
+
 //sends index.html
 app.get("/", function(request, response) {
 	response.render("index");//if the html file is callled index, you dont need a view engine. will move to one soon
