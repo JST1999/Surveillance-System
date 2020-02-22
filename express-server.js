@@ -166,6 +166,19 @@ app.get("/getmostrecent", function (request, response) {//gets most recent 50 im
 	}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
 });
 
+app.get("/getImages/:date", function (request, response) {//gets images from a certain date
+	var str = request.params.date
+	var arr = str.split('-');
+	var year = arr[0];
+	var month = arr[1];
+	var day = arr[2];
+
+	schemas.Image.find({"year": year, "month": month, "day": day}, function(err, images) {
+		response.setHeader("Content-Type", "application/json");
+		response.send(images);
+	});
+});
+
 //sends index.html
 app.get("/", function(request, response) {
 	response.render("index");//if the html file is callled index, you dont need a view engine. will move to one soon

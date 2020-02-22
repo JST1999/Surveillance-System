@@ -56,6 +56,13 @@ $(document).ready(function() {
             appendText(res);
         });
     }
+    function getImages(){  //gets the url and does a get request
+        var date = $("#date").val();
+        var uri = protocol+url+"/getImages/"+date;
+        $.get(uri, {}, function(res) {
+            appendText(res);
+        });
+    }
     function appendText(res){   //turns the get requests response into html
         var text = "";
         for (var i = 0; i < res.length; i++){
@@ -82,11 +89,11 @@ $(document).ready(function() {
         
         $("#searchResultsOutput").html(text);
     }
+
     $("#searchBTN").click(function(e) {
         e.preventDefault();
-        // getMostRecent();
+        getImages();
     });
-
 
     $("#getMostRecentBTN").click(function(e) {
         e.preventDefault();
