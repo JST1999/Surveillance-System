@@ -2,8 +2,7 @@ var url = window.location.host;//these 2 are so that the website can be on any h
 var userDetails;
 var sessionID = null;
 
-var protocol = "https://";//for heroku deployment
-//var protocol = "http://";//for localhost
+var protocol = window.location.protocol+"//";//https for heroku, http for localhost
 
 $(document).ready(function() {
     function getAdminDetails(){
