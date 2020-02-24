@@ -94,4 +94,22 @@ describe('Image', function() {
         done();
       });
   });
+  it('should list ALL items on /getImages/:date GET', function(done) {
+    this.timeout(20000);
+    setTimeout(done, 20000);
+    chai.request(server)
+      .get('/getImages/2020-02-22')
+      .end(function(err, res){
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.be.a('array');
+        res.body[0].should.have.property('_id');
+        res.body[0].should.have.property('filename');
+        res.body[0].should.have.property('year');
+        res.body[0].should.have.property('month');
+        res.body[0].should.have.property('day');
+        res.body[0].should.have.property('hour');
+        done();
+      });
+  });
 });
