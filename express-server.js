@@ -179,6 +179,45 @@ app.get("/getImages/:date", function (request, response) {//gets images from a c
 	});
 });
 
+app.post('/resetpassword', function(req, res){
+	var sessionID = req.body.sessionID
+	var oldPass = req.body.oldPass;
+	var newPass = req.body.newPass;
+
+	schemas.Session.findOne({"sessionID": sessionID}, function(err, sess) {//get session
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				var salt = user.salt;
+				var hash = createHash(oldPass, salt);
+				if(hash === user.password){
+					var newUser = user;
+					var newSalt = createSalt();
+					var newHash = createHash(newPass, newSalt);
+
+					newUser.salt = newSalt;
+					newUser.password = newHash;
+					newUser.save().then((test) => {
+						res.status("200");
+						res.json({
+							message: "Changed Successfully"
+						});
+					});
+				} else{
+					res.status("401");
+					res.json({
+						message: "Invalid Old Password"
+					});
+				}
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
+	});
+});
+
 //sends index.html
 app.get("/", function(request, response) {
 	response.render("index");//if the html file is callled index, you dont need a view engine. will move to one soon

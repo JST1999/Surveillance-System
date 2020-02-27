@@ -44,7 +44,7 @@ describe('User', function() {
           done();
         });
     });
-    it('should confirm login details of SINGLE User and return a session ID on /adminlogin POST', function(done) {
+    it('should confirm session ID of SINGLE User and return a session ID on /adminlogin POST', function(done) {
       this.timeout(20000);
       setTimeout(done, 20000);
       chai.request(server)
@@ -58,6 +58,20 @@ describe('User', function() {
           res.body.should.have.property("username");
           res.body.password.should.have.length(0);//a way of saying is empty, theres other ways of doing this
           res.body.salt.should.have.length(0);
+          done();
+        });
+    });
+    it('should confirm a password change of a SINGLE User on /resetpassword POST', function(done) {
+      this.timeout(20000);
+      setTimeout(done, 20000);
+      chai.request(server)
+        .post('/resetpassword')
+        .send({sessionID: adminSessID,
+              oldPass: "password",
+              newPass: "password"})
+        .end(function(err, res){
+          res.should.have.status(200);
+          res.should.be.json;
           done();
         });
     });
