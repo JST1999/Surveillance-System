@@ -93,7 +93,9 @@ $(document).ready(function() {
         }
     });
 
-    $("#changeBTN").click(function(){
+    $("#changeBTN").click(function(e){
+        e.preventDefault();
+        
         var oldPassword = $("#oldPasswordRP").val();
         var newPassword = $("#newPasswordRP").val();
         var conNewPassword = $("#conNewPasswordRP").val();
@@ -102,7 +104,17 @@ $(document).ready(function() {
             $("#resetPassOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
         } else{
             if (newPassword === conNewPassword){
-                $("#resetPassOutput").html("<p id='outputText' style='color: #ffa500;'>All good</p>");
+                var uri = protocol+url+"/resetpassword";
+                $.post(uri, {
+                    sessionID: sessionID,
+                    oldPass: oldPassword,
+                    newPass: newPassword
+                }, function(data, status) {
+                    $("#resetPassOutput").html("<p id='outputText' style='color: #ffa500;'>All good</p>");
+                }).fail(function(xhr, status, error) {
+                    $("#resetPassOutput").html("<p id='outputText' style='color: #ffa500;'>Old password was incorrect</p>");
+                });
+
             } else{
                 $("#resetPassOutput").html("<p id='outputText' style='color: #ffa500;'>Passwords don't match</p>");
             }
