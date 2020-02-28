@@ -40,4 +40,22 @@ $(document).ready(function() {
             });
         }
     });
+
+    $("#FUBTN").click(function(){
+        var email = $("#emailFU").val();
+
+        if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === true){
+            $("#FUsernameOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
+            var uri = protocol+url+"/requestusername";
+            $.post(uri, {
+                email: email
+            }, function(data, status) {
+                $("#FUsernameOutput").html("<p id='outputText' style='color: #ffa500;'>An email will be sent to that address if there is an account with it</p>");
+            }).fail(function(xhr, status, error) {
+                $("#FUsernameOutput").html("<p id='outputText' style='color: #ffa500;'>Request failed, try again</p>");
+            });
+        } else{
+            $("#FUsernameOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
+        }
+    });
 });

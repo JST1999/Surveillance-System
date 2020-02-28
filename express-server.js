@@ -27,14 +27,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 //one of my fav parts, this is a part for sending emails
-// var nodemailer = require('nodemailer');
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'surveilsystem@gmail.com',
-//     pass: 'What are you looking at 1'
-//   }
-// });
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'surveilsystem@gmail.com',
+    pass: 'What are you looking at 1'
+  }
+});
 
 var Storage = multer.diskStorage({//used to help add images https://dzone.com/articles/upload-files-or-images-to-server-using-nodejs
 	destination: function(req, file, callback) {
@@ -213,6 +213,34 @@ app.post('/resetpassword', function(req, res){
 			res.status("401");
 			res.json({
 				message: "Invalid Session ID"
+			});
+		}
+	});
+});
+
+app.post("/requestusername", function (req, res) {	//unneeded and a security flaw - it was used to test something - hanging on to it just in case
+	var email = req.body.email;
+	
+	schemas.Admin.findOne({"email": email}, function(err, user) {//get the account with the email
+		if(user){
+			//setup email
+			var mailOptions = {
+				from: 'surveilsystem@gmail.com',
+				to: email,
+				subject: 'Username',
+				text: 'Hello '+user.firstname+'. Your username is - '+user.username
+			};
+			//send email
+			transporter.sendMail(mailOptions, function(error, info){
+				if (error) {
+					console.log(error);
+				} else {
+					console.log('Email sent: ' + info.response);
+				}
+				res.status("200");
+				res.json({
+					message: "All good"
+				});
 			});
 		}
 	});
