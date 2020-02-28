@@ -246,6 +246,19 @@ app.post("/requestusername", function (req, res) {	//unneeded and a security fla
 	});
 });
 
+app.post("/deleteimagerecord", function(req, res){
+	schemas.Image.deleteOne({"_id": req.body.ID}, function(err, img) {
+		if (err){
+			res.status("500");
+			throw err;
+		}
+		res.status("200");
+		res.json({
+			message: "Deleted successfully"
+		});
+	});
+});
+
 //sends index.html
 app.get("/", function(request, response) {
 	response.render("index");//if the html file is callled index, you dont need a view engine. will move to one soon
