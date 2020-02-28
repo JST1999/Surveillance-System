@@ -31,8 +31,8 @@ app.use(express.static(__dirname));
 // var transporter = nodemailer.createTransport({
 //   service: 'gmail',
 //   auth: {
-//     user: 'saywatt0@gmail.com',
-//     pass: 'What are you looking at1'
+//     user: 'surveilsystem@gmail.com',
+//     pass: 'What are you looking at 1'
 //   }
 // });
 

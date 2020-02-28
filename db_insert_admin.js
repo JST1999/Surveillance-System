@@ -11,6 +11,7 @@ var salt = createSalt();
 var hash = createHash(password, salt);
 
 var Admin = new schemas.Admin({
+	"email": "jtungay@gmail.com",
 	"firstname": "Jason",
 	"lastname": "Tungay",
 	"username": "jstungay",

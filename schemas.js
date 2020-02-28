@@ -7,6 +7,7 @@ var Session = mongoose.model("Session", {//sessions
 module.exports.Session = Session;
 
 var Admin = mongoose.model("Admin", {//admins in database
+	email: String,
 	firstname: String,
 	lastname: String,
 	username: String,
