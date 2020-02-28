@@ -71,7 +71,7 @@ $(document).ready(function() {
             text += '<li class="list-group-item">' +
             '<div class="media align-items-lg-center flex-column flex-lg-row p-3">' +
             '<div class="searchResultText" class="media-body order-2 order-lg-1">' +
-            '<h5 class="mt-0 font-weight-bold mb-2">'+res[i]._id+'</h5>' +
+            '<h5 class="mt-0 font-weight-bold mb-2">'+id+'</h5>' +
             '<p class="font-italic text-muted mb-0 small">Hour-'+res[i].hour+' Date-'+res[i].day+'/'+res[i].month+'/'+res[i].year+'</p>' +
             // '<div class="d-flex align-items-center justify-content-between mt-1">' +
             // '<h6 class="font-weight-bold my-2">£'+res[i].price+'</h6>' + //could use this for ip
@@ -83,7 +83,15 @@ $(document).ready(function() {
             '</li>';
             
             $("#searchResultsOutput").on("click", "#"+id, function(){
-                console.log(event.target.id);
+                var imageID = event.target.id;
+                var uri = protocol+url+"/deleteimagerecord";
+                $.post(uri, {
+                    ID: imageID
+                }, function(data, status) { 
+                    window.location.replace("./images.html");
+                }).fail(function(xhr, status, error) {
+                    
+                });
             });
         }
         
