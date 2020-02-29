@@ -87,6 +87,22 @@ describe('User', function() {
           done();
         });
     });
+    // it('should confirm an ACCOUNT CREATION of SINGLE User on /signup POST', function(done) {
+    //   this.timeout(20000);
+    //   setTimeout(done, 20000);
+    //   chai.request(server)
+    //     .post('/signup')
+    //     .send({email: "jason.tungay@students.plymouth.ac.uk",
+    //       firstname: "Jason",
+    //       lastname: "Tungay",
+    //       username: "jst99",
+    //       password: "String"})
+    //     .end(function(err, res){
+    //       res.should.have.status(200);
+    //       res.should.be.json;
+    //       done();
+    //     });
+    // });
 });
 
 describe('Image', function() {
@@ -100,7 +116,7 @@ describe('Image', function() {
         res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('array');//dont have the should.have.property incase there are no records in the collection
-        haloInfiniteID = res.body[0]._id;
+        //haloInfiniteID = res.body[0]._id;
         done();
       });
   });

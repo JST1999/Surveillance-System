@@ -140,6 +140,68 @@ app.post("/logout", function(req, res){
 	});
 });
 
+app.post('/signup', function(req, res){
+	var firstname = req.body.firstname;
+	var lastname = req.body.lastname;
+	var email = req.body.email;
+	var password = req.body.password;
+	var username = req.body.username;
+
+	if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === true){
+		schemas.Admin.find({"email": email}, function(err, user) {
+			if (user.length != 0){
+				res.status("401");
+				res.json({
+					message: "User Already Exists! Login or choose another user id"
+				});
+			} else{
+				schemas.Admin.find({"username": username}, function(err, user) {
+					if (user.length != 0){
+						res.status("401");
+						res.json({
+							message: "User Already Exists! Login or choose another user id"
+						});
+					} else{
+						var salt = createSalt();
+						var hash = createHash(password, salt);
+						
+						var Admin = new schemas.Admin({
+							"email": email,
+							"firstname": firstname,
+							"lastname": lastname,
+							"username": username,
+							"password": password,
+							"salt": salt
+						});
+						Admin.save().then((test) => {
+							//setup email
+							var mailOptions = {
+								from: 'surveilsystem@gmail.com',
+								to: email,
+								subject: 'Welcome!',
+								text: 'Welcome '+firstname+'. This is a confirmation that you have created an account.'
+							};
+							//send email
+							transporter.sendMail(mailOptions, function(error, info){
+								if (error) {
+								console.log(error);
+								} else {
+								console.log('Email sent: ' + info.response);
+								}
+							});
+
+							res.status("200");
+							res.json({
+								message: "Added successfully"
+							});
+						});
+					}
+				});
+			}
+		});
+	}
+});
+
 app.post("/getadmindetails", function(req, res){
 	schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
 		if (sess){// session found
