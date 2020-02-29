@@ -21,6 +21,9 @@
   <!-- js cookies https://github.com/js-cookie/js-cookie -->
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 
+  <!-- Raphael - used to create the faces -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+
   <link rel="stylesheet" href="./jsandcss/font-awesome.min.css">
   <link rel="stylesheet" href="./jsandcss/slicknav.min.css">
   <link rel="stylesheet" href="./jsandcss/animate.css">
@@ -42,7 +45,7 @@
 
 <h6>Admin</h6>
 
-<!-- login popup -->
+<!-- login start -->
 <div>
   <form id="signIn">
     <p>Login</p>
@@ -56,7 +59,7 @@
 <!-- login end -->
 <br/>
 <br/>
-<!-- sign up popup -->
+<!-- forgot username start -->
 <div>
   <form id="forgotUsername">
     <p>Forgot Username?</p>
@@ -65,6 +68,25 @@
   <button class="signInUpBTNs" id="FUBTN">Request</button>
 
   <div id="FUsernameOutput"></div>
+</div>
+<!-- forgot username end -->
+<br/>
+<br/>
+<!-- sign up start -->
+<div>
+  <form id="signUp">
+      <p>Sign Up</p>
+      <input type="text" class="inputBox" id="emailSU" name="email" placeholder="Email">
+      <input type="password" class="inputBox" id="passwordSU" name="password" placeholder="********">
+  <div id="canvasdiv"><div id="id1" width="50px" height="50px"></div></div>
+      <input type="password" class="inputBox" id="confirmPasswordSU" name="confirmPassword" placeholder="Confirm ********">
+      <input type="text" class="inputBox" id="firstnameSU" name="firstname" placeholder="Firstname">
+      <input type="text" class="inputBox" id="lastnameSU" name="lastname" placeholder="Lastname">
+      <input type="text" class="inputBox" id="usernameSU" name="username" placeholder="Create Username">
+  </form>
+  <button class="signInUpBTNs" id="signUpBTN">SignUp</button>
+
+  <div id="signUpOutput"></div>
 </div>
 <!-- sign up end -->
 

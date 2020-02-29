@@ -152,14 +152,14 @@ app.post('/signup', function(req, res){
 			if (user.length != 0){
 				res.status("401");
 				res.json({
-					message: "User Already Exists! Login or choose another user id"
+					message: "User Already Exists with that email!"
 				});
 			} else{
 				schemas.Admin.find({"username": username}, function(err, user) {
 					if (user.length != 0){
 						res.status("401");
 						res.json({
-							message: "User Already Exists! Login or choose another user id"
+							message: "User Already Exists with that username!"
 						});
 					} else{
 						var salt = createSalt();
@@ -170,7 +170,7 @@ app.post('/signup', function(req, res){
 							"firstname": firstname,
 							"lastname": lastname,
 							"username": username,
-							"password": password,
+							"password": hash,
 							"salt": salt
 						});
 						Admin.save().then((test) => {
