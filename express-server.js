@@ -234,25 +234,68 @@ app.post("/getadmindetails", function(req, res){
 	});
 });
 
-app.get("/getmostrecent", function (request, response) {//gets most recent 50 images
-	schemas.Image.find(function(err, images) {
-		response.setHeader("Content-Type", "application/json");
-		response.send(images);
-	}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
-});
-
-app.get("/getImages/:date", function (request, response) {//gets images from a certain date
-	var str = request.params.date
-	var arr = str.split('-');
-	var year = arr[0];
-	var month = arr[1];
-	var day = arr[2];
-
-	schemas.Image.find({"year": year, "month": month, "day": day}, function(err, images) {
-		response.setHeader("Content-Type", "application/json");
-		response.send(images);
+// app.get("/getmostrecent", function (request, response) {//gets most recent 50 images
+// 	schemas.Image.find(function(err, images) {
+// 		response.setHeader("Content-Type", "application/json");
+// 		response.send(images);
+// 	}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
+// });
+app.post("/getmostrecent", function (req, res) {//gets most recent 50 images
+	schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				var username = user.username;
+				schemas.Image.find({"username": username}, function(err, images) {
+					res.setHeader("Content-Type", "application/json");
+					res.send(images);
+				}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
 	});
 });
+
+// app.get("/getImages/:date", function (request, response) {//gets images from a certain date
+// 	var str = request.params.date
+// 	var arr = str.split('-');
+// 	var year = arr[0];
+// 	var month = arr[1];
+// 	var day = arr[2];
+
+// 	schemas.Image.find({"year": year, "month": month, "day": day}, function(err, images) {
+// 		response.setHeader("Content-Type", "application/json");
+// 		response.send(images);
+// 	});
+// });
+app.post("/getImages/:date", function (req, res) {//gets images from a certain date
+	schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				var username = user.username;
+				var str = req.params.date
+				var arr = str.split('-');
+				var year = arr[0];
+				var month = arr[1];
+				var day = arr[2];
+				
+				schemas.Image.find({"username": username, "year": year, "month": month, "day": day}, function(err, images) {
+					res.setHeader("Content-Type", "application/json");
+					res.send(images);
+				});
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
+	});
+});
+
 
 app.post('/resetpassword', function(req, res){
 	var sessionID = req.body.sessionID

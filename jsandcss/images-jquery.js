@@ -52,15 +52,23 @@ $(document).ready(function() {
 
     function getMostRecent(){  //gets the url and does a get request
         var uri = protocol+url+"/getmostrecent";
-        $.get(uri, {}, function(res) {
-            appendText(res);
+        $.post(uri, {
+            sessionID: sessionID
+        }, function(data, status) {
+            appendText(data);
+        }).fail(function(xhr, status, error) {
+           
         });
     }
     function getImages(){  //gets the url and does a get request
         var date = $("#date").val();
         var uri = protocol+url+"/getImages/"+date;
-        $.get(uri, {}, function(res) {
-            appendText(res);
+        $.post(uri, {
+            sessionID: sessionID
+        }, function(data, status) {
+            appendText(data);
+        }).fail(function(xhr, status, error) {
+           
         });
     }
     function appendText(res){   //turns the get requests response into html
