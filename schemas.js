@@ -18,6 +18,7 @@ module.exports.Admin = Admin;
 
 var Image = mongoose.model("Image", {//images in database
 	filename: String,
+	username: String,
 	year: Number,
 	month: Number,
 	day: Number,

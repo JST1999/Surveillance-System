@@ -42,6 +42,7 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 	},
 	filename: function(req, file, callback) {
 		var name = file.originalname;
+		var sessionID = name.substring(0, 64);
 
 		var d = new Date();
 		var year = d.getFullYear();
@@ -49,21 +50,33 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 		var day = d.getDate();
 		var hour = d.getHours();
 
-		var Image = new schemas.Image({
-			"filename": name,
-			"year": year,
-			"month": month,
-			"day": day,
-			"hour": hour,
-		});
-		Image.save().then((test) => {
-			res.status("200");
-			res.json({
-				message: "Added successfully"
-			});
+		schemas.Session.findOne({"sessionID": sessionID}, function(err, sess) {
+			if (sess){// session found
+				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+					var Image = new schemas.Image({
+						"filename": name,
+						"username": user.username,
+						"year": year,
+						"month": month,
+						"day": day,
+						"hour": hour,
+					});
+					Image.save().then((test) => {
+						res.status("200");
+						res.json({
+							message: "Added successfully"
+						});
+					});
+					callback(null, name);
+				});
+			} else{
+				res.status("401");
+				res.json({
+					message: "Invalid Session ID"
+				});
+			}
 		});
 
-		callback(null, name);
 	}
 });//also, another one of my fav features
 var upload = multer({
