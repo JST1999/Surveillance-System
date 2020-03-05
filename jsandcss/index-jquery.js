@@ -63,6 +63,26 @@ $(document).ready(function() {
         }
     });
 
+    $("#FPBTN").click(function(){
+        var email = $("#emailFP").val();
+        var username = $("#usernameFP").val();
+
+        if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === true){
+            $("#FPasswordOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
+            var uri = protocol+url+"/requestnewpass";
+            $.post(uri, {
+                email: email,
+                username: username
+            }, function(data, status) {
+                $("#FPasswordOutput").html("<p id='outputText' style='color: #ffa500;'>An email will be sent to that address if there is an account with it</p>");
+            }).fail(function(xhr, status, error) {
+                $("#FPasswordOutput").html("<p id='outputText' style='color: #ffa500;'>Request failed, try again</p>");
+            });
+        } else{
+            $("#FPasswordOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
+        }
+    });
+
     $("#passwordSU").keyup(function(){
         var password = $("#passwordSU").val();
         

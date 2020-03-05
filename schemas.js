@@ -25,3 +25,9 @@ var Image = mongoose.model("Image", {//images in database
 	hour: Number
 });
 module.exports.Image = Image;
+
+var NewPassSession = mongoose.model("NewPassSession", {//newpasssessions
+	sessionID: String,
+	userID: String
+});
+module.exports.NewPassSession = NewPassSession;

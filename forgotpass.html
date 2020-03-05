@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="./jsandcss/animate.css">
   <link rel="stylesheet" href="./jsandcss/style.css">
 
-  <script src="./jsandcss/index-jquery.js"></script>
+  <script src="./jsandcss/forgotpass-jquery.js"></script>
 
 </head>
 <body>
@@ -43,66 +43,23 @@
 <div class="container">
 <div class="row">
 
-<h6>Admin</h6>
+<h6>Create New Password</h6>
 
-<!-- login start -->
+<!-- new pass start -->
 <div>
   <form id="signIn">
     <p>Login</p>
-    <input type="text" class="inputBox" id="usernameLI" name="email" placeholder="Username">
-    <input type="password" class="inputBox" id="passwordLI" name="password" placeholder="********">
+    <input type="text" class="inputBox" id="usernameNP" name="email" placeholder="Username">
+    <input type="password" class="inputBox" id="passwordNP" name="password" placeholder="********">
+    <input type="password" class="inputBox" id="conPasswordNP" name="password" placeholder="********">
+    <div id="canvasdiv"><div id="id1" width="50px" height="50px"></div></div>
   </form>
-  <button class="signInUpBTNs" id="loginBTN">Login</button>
+  <button class="signInUpBTNs" id="loginBTN">Change</button>
 
-  <div id="loginFormOutput"></div>
+  <div id="NPOutput"></div>
 </div>
-<!-- login end -->
-<br/>
-<br/>
-<!-- forgot username start -->
-<div>
-  <form id="forgotUsername">
-    <p>Forgot Username?</p>
-    <input type="email" class="inputBox" id="emailFU" name="emailFU" placeholder="example@gmail.com">
-  </form>
-  <button class="signInUpBTNs" id="FUBTN">Request</button>
+<!-- new pass end -->
 
-  <div id="FUsernameOutput"></div>
-</div>
-<!-- forgot username end -->
-<br/>
-<br/>
-<!-- forgot password start -->
-<div>
-  <form id="forgotPassword">
-    <p>Forgot Username?</p>
-    <input type="email" class="inputBox" id="emailFP" name="emailFP" placeholder="example@gmail.com">
-    <input type="text" class="inputBox" id="usernameFP" name="userFP" placeholder="Username">
-  </form>
-  <button class="signInUpBTNs" id="FPBTN">Request</button>
-
-  <div id="FPasswordOutput"></div>
-</div>
-<!-- forgot password end -->
-<br/>
-<br/>
-<!-- sign up start -->
-<div>
-  <form id="signUp">
-      <p>Sign Up</p>
-      <input type="text" class="inputBox" id="emailSU" name="email" placeholder="Email">
-      <input type="password" class="inputBox" id="passwordSU" name="password" placeholder="********">
-  <div id="canvasdiv"><div id="id1" width="50px" height="50px"></div></div>
-      <input type="password" class="inputBox" id="confirmPasswordSU" name="confirmPassword" placeholder="Confirm ********">
-      <input type="text" class="inputBox" id="firstnameSU" name="firstname" placeholder="Firstname">
-      <input type="text" class="inputBox" id="lastnameSU" name="lastname" placeholder="Lastname">
-      <input type="text" class="inputBox" id="usernameSU" name="username" placeholder="Create Username">
-  </form>
-  <button class="signInUpBTNs" id="signUpBTN">SignUp</button>
-
-  <div id="signUpOutput"></div>
-</div>
-<!-- sign up end -->
 
 </div>
 </div>

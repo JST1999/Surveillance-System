@@ -364,6 +364,36 @@ app.post("/requestusername", function (req, res) {	//unneeded and a security fla
 	});
 });
 
+app.post("/requestnewpass", function (req, res) {	//unneeded and a security flaw - it was used to test something - hanging on to it just in case
+	var email = req.body.email;
+	var username = req.body.username;
+	
+	schemas.Admin.findOne({"email": email}, function(err, user) {//get the account with the email
+		if(user.username = username){
+			// //setup email
+			// var mailOptions = {
+			// 	from: 'surveilsystem@gmail.com',
+			// 	to: email,
+			// 	subject: 'Username',
+			// 	text: 'Hello '+user.firstname+'. Your username is - '+user.username
+			// };
+			// //send email
+			// transporter.sendMail(mailOptions, function(error, info){
+			// 	if (error) {
+			// 		console.log(error);
+			// 	} else {
+			// 		console.log('Email sent: ' + info.response);
+			// 	}
+			// 	res.status("200");
+			// 	res.json({
+			// 		message: "All good"
+			// 	});
+			// });
+			console.log(username + " sent a new pass req");
+		}
+	});
+});
+
 app.post("/deleteimagerecord", function(req, res){
 	schemas.Image.deleteOne({"_id": req.body.ID}, function(err, img) {
 		if (err){
