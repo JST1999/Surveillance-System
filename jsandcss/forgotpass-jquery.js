@@ -4,8 +4,24 @@ var protocol = window.location.protocol+"//";//https for heroku, http for localh
 
 var paper;//for faces
 
+var sessID;
+var userDetails
+
 $(document).ready(function() {
     paper = new Raphael($('#canvasdiv').get(0), 50, 50);
+
+    function checkID(){  //gets the url and does a get request
+        sessID = window.location.href.slice(window.location.href.indexOf('=') + 1);
+        var uri = protocol+url+"/checknewpassid";
+        $.post(uri, { 
+            sessionID: sessID
+        }, function(data, status) {
+            userDetails = data;
+        }).fail(function(xhr, status, error) {
+            window.location.replace("./");
+        });
+    }
+    checkID();
 
     $("#passwordNP").keyup(function(){
         var password = $("#passwordNP").val();

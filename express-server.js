@@ -369,27 +369,67 @@ app.post("/requestnewpass", function (req, res) {	//unneeded and a security flaw
 	var username = req.body.username;
 	
 	schemas.Admin.findOne({"email": email}, function(err, user) {//get the account with the email
-		if(user.username = username){
-			// //setup email
-			// var mailOptions = {
-			// 	from: 'surveilsystem@gmail.com',
-			// 	to: email,
-			// 	subject: 'Username',
-			// 	text: 'Hello '+user.firstname+'. Your username is - '+user.username
-			// };
-			// //send email
-			// transporter.sendMail(mailOptions, function(error, info){
-			// 	if (error) {
-			// 		console.log(error);
-			// 	} else {
-			// 		console.log('Email sent: ' + info.response);
-			// 	}
-			// 	res.status("200");
-			// 	res.json({
-			// 		message: "All good"
-			// 	});
-			// });
-			console.log(username + " sent a new pass req");
+		if(user){
+			if(user.username === username){
+				var sessID = createHash(user._id, 'NewPass');
+				var NewPassSession = new schemas.NewPassSession({//create new session
+					sessionID: sessID,
+					userID: user._id
+				});
+				NewPassSession.save().then((test) => {
+					var url = "surv-system.herokuapp.com/forgotpass.html?id="+sessID;
+					//setup email
+					var mailOptions = {
+						from: 'surveilsystem@gmail.com',
+						to: email,
+						subject: 'New Password',
+						text: 'Hello '+user.firstname+'. Click on this link to create a new password '+url
+					};
+					//send email
+					transporter.sendMail(mailOptions, function(error, info){
+						if (error) {
+							console.log(error);
+						} else {
+							console.log('Email sent: ' + info.response);
+						}
+					});
+
+					res.status("200");
+					res.json({
+						message: "Request Done"
+					});
+				});
+			} else{
+				res.status("401");
+				res.json({
+					message: "Invalid credentials"
+				});
+			}
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid credentials"
+			});
+		}
+	});
+});
+
+//298650ddd18ad3dccdbfccbd1778028b9cc6d5b0a5a4039dcf876737c0d69d7c
+app.post("/checknewpassid", function(req, res){
+	schemas.NewPassSession.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				res.setHeader("Content-Type", "application/json");
+				user.password = "";//security flaw if I send passwords back
+				user.salt = "";
+				res.status("200");
+				res.send(user);
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
 		}
 	});
 });
