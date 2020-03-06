@@ -434,6 +434,45 @@ app.post("/checknewpassid", function(req, res){
 	});
 });
 
+app.post('/fpnewpass', function(req, res){
+	var sessionID = req.body.sessionID
+	var newPass = req.body.newPass;
+
+	schemas.NewPassSession.findOne({"sessionID": sessionID}, function(err, sess) {//get session
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				console.log("all good")
+				// var salt = user.salt;
+				// var hash = createHash(oldPass, salt);
+				// if(hash === user.password){
+				// 	var newUser = user;
+				// 	var newSalt = createSalt();
+				// 	var newHash = createHash(newPass, newSalt);
+
+				// 	newUser.salt = newSalt;
+				// 	newUser.password = newHash;
+				// 	newUser.save().then((test) => {
+				// 		res.status("200");
+				// 		res.json({
+				// 			message: "Changed Successfully"
+				// 		});
+				// 	});
+				// } else{
+				// 	res.status("401");
+				// 	res.json({
+				// 		message: "Invalid Old Password"
+				// 	});
+				// }
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
+	});
+});
+
 app.post("/deleteimagerecord", function(req, res){
 	schemas.Image.deleteOne({"_id": req.body.ID}, function(err, img) {
 		if (err){

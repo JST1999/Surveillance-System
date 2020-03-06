@@ -61,4 +61,28 @@ $(document).ready(function() {
             var mouth = paper.path("M " + mouthX + "," + mouthY + "q 9,-6 17,0");
         }
     });
+
+    $("#NPBTN").click( function(){
+        var password = $("#passwordNP").val();
+        var conPassword = $("#conPasswordNP").val();
+
+        if(password.length === 0 || conPassword.length === 0){
+            $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
+        } else{
+            if(password != conPassword){
+                $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>Passwords don't match</p>");
+            } else{
+                $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
+                var uri = protocol+url+"/fpnewpass";
+                $.post(uri, { 
+                    sessionID: sessID,
+                    newPass: password,
+                }, function(data, status) { 
+                    $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>"+data.message+"</p>");
+                }).fail(function(xhr, status, error) {
+                    $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>Email or username is already in use</p>");
+                });
+            }
+        }
+    });
 });
