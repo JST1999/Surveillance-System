@@ -80,7 +80,7 @@ $(document).ready(function() {
                 }, function(data, status) { 
                     $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>"+data.message+"</p>");
                 }).fail(function(xhr, status, error) {
-                    $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>Email or username is already in use</p>");
+                    $("#NPOutput").html("<p id='outputText' style='color: #ffa500;'>Network error. Check your connection and try again</p>");
                 });
             }
         }
