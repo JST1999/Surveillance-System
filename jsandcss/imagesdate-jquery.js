@@ -51,9 +51,10 @@ $(document).ready(function() {
         });
     });
 
-
-    function getMostRecent(){  //gets the url and does a get request
-        var uri = protocol+url+"/getmostrecent";
+    
+    function getImages(){  //gets the url and does a get request
+        var date = $("#date").val();
+        var uri = protocol+url+"/getImages/"+date;
         $.post(uri, {
             sessionID: sessionID
         }, function(data, status) {
@@ -97,43 +98,8 @@ $(document).ready(function() {
         $("#searchResultsOutput").html(text);
     }
 
-    getMostRecent();
-
-    
-    // if user is running mozilla then use it's built-in WebSocket
-    window.WebSocket = window.WebSocket || window.MozWebSocket;
-    // if browser doesn't support WebSocket, just show some notification and exit
-    if (!window.WebSocket) {
-        console.log('Sorry, but your browser doesn\'t support WebSocket.');
-        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Your browser doesn\'t support WebSocket</p>");
-    }
-    //get protocol
-    // if(protocol.length === 8){
-    //     socketProtocol = "wss://"
-    // } else{
-    //     socketProtocol = "ws://"
-    // }
-    var socketProtocol = "ws://"
-    // open connection
-    var uri = socketProtocol+window.location.hostname+":9000/";
-    var connection = new WebSocket(uri);
-    connection.onopen = function () {
-        console.log('WebSocket Client Connected');
-        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>WebSocket Client Connected</p>");
-    };
-    connection.onerror = function (error) {
-        console.log("Connection Error: " + error.toString());
-        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Connection Error: "+error.toString()+"</p>");
-    };
-    // most important part - incoming messages
-    connection.onmessage = function (message) {
-        console.log("Received: '" + message.data + "'");
-        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Received: "+message.data+"</p>");
-        if(message.data === "change"){
-            // newImageCounter++;
-            // $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>"+newImageCounter+" New Image(s)</p>");
-            // console.log(newImageCounter+" New Image(s)");
-            getMostRecent();
-        }
-    };
+    $("#searchBTN").click(function(e) {
+        e.preventDefault();
+        getImages();
+    });
 });

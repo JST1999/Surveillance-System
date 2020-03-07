@@ -21,15 +21,12 @@
   <!-- js cookies https://github.com/js-cookie/js-cookie -->
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 
-  <!-- Raphael - used to create the faces -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
-
   <link rel="stylesheet" href="./jsandcss/font-awesome.min.css">
   <link rel="stylesheet" href="./jsandcss/slicknav.min.css">
   <link rel="stylesheet" href="./jsandcss/animate.css">
   <link rel="stylesheet" href="./jsandcss/style.css">
 
-  <script src="./jsandcss/resetpass-jquery.js"></script>
+  <script src="./jsandcss/imagesdate-jquery.js"></script>
 
 </head>
 <body>
@@ -43,7 +40,7 @@
 <div class="container">
 <div class="row">
 
-<h6>Admin - Reset Password</h6>
+<h6>Admin - Photos From Date</h6>
 
 </div>
 </div>
@@ -119,23 +116,31 @@
 
 </header>
 
-<!-- main part start -->
+<!-- search result start -->
 <div>
 <div class="container">
   <div class="row">
-    <form id="signIn">
-      <p>Change Password</p>
-      <input type="password" class="inputBox" id="oldPasswordRP" name="oldPassword" placeholder="Old Password">
-      <input type="password" class="inputBox" id="newPasswordRP" name="newPassword" placeholder="New Password">
-      <div id="canvasdiv"><div id="id1" width="50px" height="50px"></div></div>
-      <input type="password" class="inputBox" id="conNewPasswordRP" name="conNewPassword" placeholder="Confirm New Password">
-    </form>
-    <button class="signInUpBTNs" id="changeBTN">Change</button>
-  
-    <div id="resetPassOutput"></div>
+      <div class="col-xs-6">
+        <!-- search bar -->
+        <form id="searchF">
+          <input type="date" id="date" name="date">
+          <button id="searchBTN"><img src="./icons/search-icon.png" alt=""></button>
+        </form>
+      </div>
   </div>
 </div>
-<!-- main part end -->
+<!-- search bar end -->
+<div class="container py-5" id="searchResults">
+  <div class="row">
+      <div class="col-lg-12 mx-auto">
+          <ul id="searchResultsOutput" class="list-group shadow">
+              
+          </ul> 
+      </div>
+  </div>
+</div>
+</div>
+<!-- search result end -->
 
 
 <script src="./jsandcss/jquery-3.2.1.min.js.download" type="text/javascript"></script>
