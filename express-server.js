@@ -69,11 +69,6 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 					});
 					callback(null, name);
 				});
-			} else{
-				res.status("401");
-				res.json({
-					message: "Invalid Session ID"
-				});
 			}
 		});
 

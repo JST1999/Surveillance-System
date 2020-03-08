@@ -7,6 +7,10 @@ var protocol = window.location.protocol+"//";//https for heroku, http for localh
 //var newImageCounter = 0;
 
 $(document).ready(function() {
+    if (Notification.permission !== 'granted'){
+        Notification.requestPermission();
+    }
+
     function getAdminDetails(){
         var uri = protocol+url+"/getadmindetails";
         $.post(uri, {
@@ -98,8 +102,22 @@ $(document).ready(function() {
     }
 
     getMostRecent();
-
     
+    //one of my fav features. send notification
+    function notifyMe() {
+        if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+        else {
+            var notification = new Notification('Notification title', {
+                icon: './icons/logo.png',
+                body: 'New Image!'
+            });
+                notification.onclick = function() {
+                window.open('./images.html');
+            };
+        }
+    }
+
     // if user is running mozilla then use it's built-in WebSocket
     window.WebSocket = window.WebSocket || window.MozWebSocket;
     // if browser doesn't support WebSocket, just show some notification and exit
@@ -130,6 +148,8 @@ $(document).ready(function() {
         console.log("Received: '" + message.data + "'");
         $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Received: "+message.data+"</p>");
         if(message.data === "change"){
+            $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>New Image has been added, or an Image has been deleted</p>");
+            notifyMe();
             // newImageCounter++;
             // $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>"+newImageCounter+" New Image(s)</p>");
             // console.log(newImageCounter+" New Image(s)");

@@ -102,4 +102,54 @@ $(document).ready(function() {
         e.preventDefault();
         getImages();
     });
+
+    //one of my fav features. send notification
+    function notifyMe() {
+        if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+        else {
+            var notification = new Notification('Notification title', {
+                icon: './icons/logo.png',
+                body: 'New Image!'
+            });
+                notification.onclick = function() {
+                window.open('./images.html');
+            };
+        }
+    }
+
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+        console.log('Sorry, but your browser doesn\'t support WebSocket.');
+        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Your browser doesn\'t support WebSocket</p>");
+    }
+    //get protocol
+    // if(protocol.length === 8){
+    //     socketProtocol = "wss://"
+    // } else{
+    //     socketProtocol = "ws://"
+    // }
+    var socketProtocol = "ws://"
+    // open connection
+    var uri = socketProtocol+window.location.hostname+":9000/";
+    var connection = new WebSocket(uri);
+    connection.onopen = function () {
+        console.log('WebSocket Client Connected');
+        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>WebSocket Client Connected</p>");
+    };
+    connection.onerror = function (error) {
+        console.log("Connection Error: " + error.toString());
+        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Connection Error: "+error.toString()+"</p>");
+    };
+    // most important part - incoming messages
+    connection.onmessage = function (message) {
+        console.log("Received: '" + message.data + "'");
+        $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Received: "+message.data+"</p>");
+        if(message.data === "change"){
+            $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>New Image has been added, or an Image has been deleted</p>");
+            notifyMe();
+        }
+    };
 });
