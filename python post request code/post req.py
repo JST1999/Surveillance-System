@@ -15,7 +15,9 @@ import json
 
 
 url = "http://localhost:8080/addimage"
+#url = "http://surv-system.herokuapp.com/addimage"
+sessID = "d9542d9a66eebab933764a9f28bea0f67b7e9144a50bdeb80ea0a2a5ed9c849e"
 
-files = {"imgUploader": open("a7fe518213d7b27d1cde683b8d3cef060239792fe62108c931e609d0d24eb4820.jpg", "rb")}
+files = {"imgUploader": open(sessID+"0.jpg", "rb")}
 
 requests.post(url, files=files)

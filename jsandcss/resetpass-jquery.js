@@ -126,9 +126,9 @@ $(document).ready(function() {
         if (Notification.permission !== 'granted')
             Notification.requestPermission();
         else {
-            var notification = new Notification('Notification title', {
+            var notification = new Notification('New Image!', {
                 icon: './icons/logo.png',
-                body: 'New Image!'
+                body: 'A new image has been added or one has been removed.'
             });
                 notification.onclick = function() {
                 window.open('./images.html');

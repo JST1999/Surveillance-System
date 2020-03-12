@@ -22,7 +22,10 @@ var Image = mongoose.model("Image", {//images in database
 	year: Number,
 	month: Number,
 	day: Number,
-	hour: Number
+	hour: Number,
+	minute: Number,
+	second: Number,
+	millisecond: Number
 });
 module.exports.Image = Image;
 

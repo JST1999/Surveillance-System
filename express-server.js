@@ -49,6 +49,9 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 		var month = d.getMonth() + 1;//jan is month 0
 		var day = d.getDate();
 		var hour = d.getHours();
+		var min = d.getMinutes();
+		var sec = d.getSeconds();
+		var millisecond = d.getMilliseconds();
 
 		schemas.Session.findOne({"sessionID": sessionID}, function(err, sess) {
 			if (sess){// session found
@@ -60,6 +63,9 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 						"month": month,
 						"day": day,
 						"hour": hour,
+						"minute": min,
+						"second": sec,
+						"millisecond": millisecond
 					});
 					Image.save().then((test) => {
 						res.status("200");
@@ -119,8 +125,10 @@ app.post('/adminlogin', function(req, res){
 					message: "Invalid Email or Password"
 				});
 			} else{//password is correct
+				var d = new Date();
+				var time = d.getTime();//milliseconds since 1 Jan 1970, should be around 1.5 trillion
 				var Session = new schemas.Session({//create new session
-					sessionID: createHash(user[0]._id, ''),
+					sessionID: createHash(user[0]._id, time),//creates a longer session id
 					userID: user[0]._id
 				});
 				schemas.Session.insertMany(Session, function(err){
@@ -366,7 +374,9 @@ app.post("/requestnewpass", function (req, res) {	//unneeded and a security flaw
 	schemas.Admin.findOne({"email": email}, function(err, user) {//get the account with the email
 		if(user){
 			if(user.username === username){
-				var sessID = createHash(user._id, 'NewPass');
+				var d = new Date();
+				var time = d.getTime();//milliseconds since 1 Jan 1970, should be around 1.5 trillion
+				var sessID = createHash(user._id, 'NewPass'+time);
 				var NewPassSession = new schemas.NewPassSession({//create new session
 					sessionID: sessID,
 					userID: user._id
@@ -409,7 +419,6 @@ app.post("/requestnewpass", function (req, res) {	//unneeded and a security flaw
 	});
 });
 
-//298650ddd18ad3dccdbfccbd1778028b9cc6d5b0a5a4039dcf876737c0d69d7c
 app.post("/checknewpassid", function(req, res){
 	schemas.NewPassSession.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
 		if (sess){// session found
