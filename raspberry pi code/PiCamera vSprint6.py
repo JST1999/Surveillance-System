@@ -100,17 +100,49 @@ def main(sessionID):
     gpio.cleanup()
 
 
+#offline version of main
+def main_offline():
+    print("Now running...")
+    
+    file = open("numberOffline.txt", 'r+')
+    i = int(file.read())#used to give each pic its own unique name
+    file.close()
+    
+    while True:
+        if gpio.input(11) == True:#can be one, if ir sensor sends a signal it will be 1/true
+            gpio.output(13, True)#led on
+            
+            name = "image" + "%s.jpg" % i#e.g. image0.jpg, image1.jpg
+            
+            camera.capture(name)#saved into the same directory. If an image.jpg already exists, then it will be overwritten
+            
+            i += 1
+            file = open("numberOffline.txt", 'w')#the w method will overwrite the previous value, whereas r+ doesn't
+            file.write(str(i))#non-volatile storage of what image number I'm on
+            file.close()#saves changes
+        else:
+            gpio.output(13, False)#led off
+        
+    gpio.cleanup()
+
+
 while True:
-    if not sessID:#if sessID is empty
-        print("No sessionID was found. Login below:")
-        main(login())
-    else:
-        answer = input("SessionID was found. Continue with current session ID(Y or N):")
-        answer = answer.upper()
-        if answer == 'Y':
-            main(sessID)
-        elif answer == 'N':
-            logout(sessID)
+    onOrOff = input("0 for offline | 1 for online:")
+    if onOrOff == "0":#as a string, there will be no need for try except in case the value cant be converted to an int e.g. int("a")
+        main_offline()
+    elif onOrOff == "1":
+        if not sessID:#if sessID is empty
+            print("No sessionID was found. Login below:")
             main(login())
         else:
-            print("Invalid input")
+            answer = input("SessionID was found. Continue with current session ID(Y or N):")
+            answer = answer.upper()
+            if answer == 'Y':
+                main(sessID)
+            elif answer == 'N':
+                logout(sessID)
+                main(login())
+            else:
+                print("Invalid input")
+    else:
+        print("Invalid input")
