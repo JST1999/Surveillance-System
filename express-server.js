@@ -358,6 +358,25 @@ app.post("/getmostrecent", function (req, res) {//gets most recent 50 images
 	});
 });
 
+app.post("/getmostrecentvideos", function (req, res) {//gets most recent 50 images
+	// schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+	// 	if (sess){// session found
+	// 		schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+	// 			var username = user.username;
+	// 			schemas.Image.find({"username": username}, function(err, images) {
+	// 				res.setHeader("Content-Type", "application/json");
+	// 				res.send(images);
+	// 			}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
+	// 		});
+	// 	} else{
+	// 		res.status("401");
+	// 		res.json({
+	// 			message: "Invalid Session ID"
+	// 		});
+	// 	}
+	// });
+});
+
 // app.get("/getImages/:date", function (request, response) {//gets images from a certain date
 // 	var str = request.params.date
 // 	var arr = str.split('-');
@@ -393,6 +412,31 @@ app.post("/getImages/:date", function (req, res) {//gets images from a certain d
 			});
 		}
 	});
+});
+
+app.post("/getvideos/:date", function (req, res) {//gets images from a certain date
+	// schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+	// 	if (sess){// session found
+	// 		schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+	// 			var username = user.username;
+	// 			var str = req.params.date
+	// 			var arr = str.split('-');
+	// 			var year = arr[0];
+	// 			var month = arr[1];
+	// 			var day = arr[2];
+				
+	// 			schemas.Image.find({"username": username, "year": year, "month": month, "day": day}, function(err, images) {
+	// 				res.setHeader("Content-Type", "application/json");
+	// 				res.send(images);
+	// 			});
+	// 		});
+	// 	} else{
+	// 		res.status("401");
+	// 		res.json({
+	// 			message: "Invalid Session ID"
+	// 		});
+	// 	}
+	// });
 });
 
 
@@ -615,16 +659,22 @@ wsServer.on('request', function(request) {
       return;
     }
     
-    var connection = request.accept(null, request.origin);
     console.log((new Date()) + ' Connection accepted.');
+	var connection = request.accept(null, request.origin);
+    connection.on('close', function(reasonCode, description) {
+		console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+	});
+	
 	const changeStream = schemas.Image.watch();
 	changeStream.on('change', next => {
 		console.log("New change in image collection")
 		connection.sendUTF("change");
 	});
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
+	const changeStreamVids = schemas.Video.watch();
+	changeStreamVids.on('change', next => {
+		console.log("New change in video collection")
+		connection.sendUTF("change");
+	});
 });
 
 

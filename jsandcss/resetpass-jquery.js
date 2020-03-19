@@ -126,9 +126,9 @@ $(document).ready(function() {
         if (Notification.permission !== 'granted')
             Notification.requestPermission();
         else {
-            var notification = new Notification('New Image!', {
+            var notification = new Notification('New Item!', {
                 icon: './icons/logo.png',
-                body: 'A new image has been added or one has been removed.'
+                body: 'A new image or video has been added or one has been removed.'
             });
                 notification.onclick = function() {
                 window.open('./images.html');
@@ -166,7 +166,7 @@ $(document).ready(function() {
         console.log("Received: '" + message.data + "'");
         $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>Received: "+message.data+"</p>");
         if(message.data === "change"){
-            $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>New Image has been added, or an Image has been deleted</p>");
+            $("#webSocketsOutput").html("<p id='outputText' style='color: #ffa500;'>New Image/Video has been added or deleted</p>");
             notifyMe();
         }
     };
