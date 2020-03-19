@@ -14,10 +14,10 @@ import json
 ##print(sessionID)
 
 
-url = "http://localhost:8080/addimage"
-#url = "http://surv-system.herokuapp.com/addimage"
-sessID = "d9542d9a66eebab933764a9f28bea0f67b7e9144a50bdeb80ea0a2a5ed9c849e"
+url = "http://localhost:8080/addvideo"#video mode
+#url = "http://surv-system.herokuapp.com/addimage"#image mode
+sessID = "d29eabe218fc3b823f6f49c7128f3b9296f6cb2f84464a868d1dbb39acf2c480"
 
-files = {"imgUploader": open(sessID+"0.jpg", "rb")}
+files = {"vidUploader": open(sessID+"0.mp4", "rb")}#video mode, vidUploader
 
 requests.post(url, files=files)

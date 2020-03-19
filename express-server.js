@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
+var videoUpload = multer();
 //var cookieParser = require('cookie-parser');
 var sha256 = require('sha256');
 
@@ -25,6 +26,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(cookieParser());
 
 app.use(express.static(__dirname));
+
+var ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfprobePath("./ffprobe.exe");
 
 //one of my fav parts, this is a part for sending emails
 var nodemailer = require('nodemailer');
@@ -83,9 +87,101 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 var upload = multer({
 	storage: Storage
 }).array("imgUploader", 3); //Field name and max count
-
 app.post("/addimage", function(req, res) {
 	upload(req, res, function(err) {
+		if (err) {
+			return res.end("Something went wrong!");
+		}
+		return res.end("File uploaded sucessfully!");
+	});
+});
+
+var videoStorage = multer.diskStorage({
+	destination: function(req, file, callback) {
+		callback(null, "./videos");
+	},
+	filename: function(req, file, callback) {
+		var name = file.originalname;
+		callback(null, name);
+
+		var sessionID = name.substring(0, 64);
+
+		var d = new Date();
+		var year = d.getFullYear();
+		var month = d.getMonth() + 1;//jan is month 0
+		var day = d.getDate();
+		var hour = d.getHours();
+		var min = d.getMinutes();
+		var sec = d.getSeconds();
+		var millisecond = d.getMilliseconds();
+
+		schemas.Session.findOne({"sessionID": sessionID}, function(err, sess) {
+			if (sess){// session found
+				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+
+					ffmpeg.ffprobe("./videos/"+name, function(err, metadata) {//e.g. './videos/sample_1.mp4'
+						if (err){
+							console.log("Path was not found");
+						} else{
+							var Video = new schemas.Video({
+								"username": user.username,
+								"year": year,
+								"month": month,
+								"day": day,
+								"hour": hour,
+								"minute": min,
+								"second": sec,
+								"millisecond": millisecond,
+								"filename": metadata["format"]["filename"],
+								"duration": metadata["format"]["duration"],
+								"size": metadata["format"]["size"],
+								"video_streams": [
+									{
+										"bitrate": "[bitrate]",
+										"fps":"[frames_per_second]",
+										"resolution":"[resolution]"
+									}
+								]
+							});
+							
+							var video = [];
+							for (i = 0; i < metadata["streams"]["length"]; i++){
+								if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
+									var str = metadata["streams"][i]["avg_frame_rate"];
+									var arr = str.split('/');
+									var fps = arr[0] / arr[1];
+									video = video.concat({
+										bitrate: metadata["streams"][i]["bit_rate"],
+										fps: fps,
+										resolution: metadata["streams"][i]["width"]+"x"+metadata["streams"][i]["height"]
+									});
+								}
+							}
+							Video.video_streams = video;
+
+							Video.save().then((test) => {
+								res.status("200");
+								res.json({
+									message: "Added successfully"
+								});
+							});
+
+							//console.dir(Video);
+							//console.dir(metadata);
+						}
+					});
+
+				});
+			}
+		});
+
+	}
+});
+var videoUpload = multer({
+	storage: videoStorage
+}).array("vidUploader", 1);
+app.post("/addvideo", function(req, res) {
+	videoUpload(req, res, function(err) {
 		if (err) {
 			return res.end("Something went wrong!");
 		}

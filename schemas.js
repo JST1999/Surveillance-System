@@ -34,3 +34,25 @@ var NewPassSession = mongoose.model("NewPassSession", {//newpasssessions
 	userID: String
 });
 module.exports.NewPassSession = NewPassSession;
+
+var Video = mongoose.model("Video", {//videos in database
+	username: String,
+	year: Number,
+	month: Number,
+	day: Number,
+	hour: Number,
+	minute: Number,
+	second: Number,
+	millisecond: Number,
+	filename: String,
+	duration: Number,
+	size: Number,
+	video_streams: [
+		{
+			bitrate: Number,
+			fps: Number,
+			resolution: String
+		}
+	]
+});
+module.exports.Video = Video;
