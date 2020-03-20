@@ -14,6 +14,8 @@ app.use(function(req, res, next) {
 	next();
 });
 
+var os = require("os");//to get hostname
+
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
@@ -688,6 +690,10 @@ app.get("/", function(request, response) {
 app.listen(port, function() {
 	mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then((test) => {
 		console.log("Connected to DB");
+		var tmpdir = os.tmpdir();
+		console.log(tmpdir);
+		var hostname = os.hostname();
+		console.log(hostname);
 	});
 	console.log("Listening...");
 })
