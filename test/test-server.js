@@ -105,43 +105,82 @@ describe('User', function() {
     // });
 });
 
-describe('Image', function() {
-  //var haloInfiniteID;
-  it('should list ALL images on /getmostrecent GET', function(done) {
-    this.timeout(20000);
-    setTimeout(done, 20000);
-    chai.request(server)
-      .get('/getmostrecent')
-      .end(function(err, res){
-        res.should.have.status(200);
-        res.should.be.json;
-        res.body.should.be.a('array');//dont have the should.have.property incase there are no records in the collection
-        //haloInfiniteID = res.body[0]._id;
-        done();
-      });
-  });
-  it('should list ALL images on /getImages/:date GET', function(done) {
-    this.timeout(20000);
-    setTimeout(done, 20000);
-    chai.request(server)
-      .get('/getImages/2020-02-22')
-      .end(function(err, res){
-        res.should.have.status(200);
-        res.should.be.json;
-        res.body.should.be.a('array');
-        done();
-      });
-  });
-  // it('should DELETE SINGLE image on /deleteimagerecord POST', function(done) {//commented out in case halo infinite or any image records are in the collection
-  //   this.timeout(20000);
-  //   setTimeout(done, 20000);
-  //   chai.request(server)
-  //     .post('/deleteimagerecord')
-  //     .send({ID: haloInfiniteID})
-  //     .end(function(err, res){
-  //       res.should.have.status(200);
-  //       res.should.be.json;
-  //       done();
-  //     });
-  // });
-});
+// describe('Image', function() {
+//   //var haloInfiniteID;
+//   it('should list ALL images on /getmostrecent GET', function(done) {
+//     this.timeout(20000);
+//     setTimeout(done, 20000);
+//     chai.request(server)
+//       .get('/getmostrecent')
+//       .end(function(err, res){
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.should.be.a('array');//dont have the should.have.property incase there are no records in the collection
+//         //haloInfiniteID = res.body[0]._id;
+//         done();
+//       });
+//   });
+//   it('should list ALL images on /getImages/:date GET', function(done) {
+//     this.timeout(20000);
+//     setTimeout(done, 20000);
+//     chai.request(server)
+//       .get('/getImages/2020-02-22')
+//       .end(function(err, res){
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.should.be.a('array');
+//         done();
+//       });
+//   });
+//   // it('should DELETE SINGLE image on /deleteimagerecord POST', function(done) {//commented out in case halo infinite or any image records are in the collection
+//   //   this.timeout(20000);
+//   //   setTimeout(done, 20000);
+//   //   chai.request(server)
+//   //     .post('/deleteimagerecord')
+//   //     .send({ID: haloInfiniteID})
+//   //     .end(function(err, res){
+//   //       res.should.have.status(200);
+//   //       res.should.be.json;
+//   //       done();
+//   //     });
+//   // });
+// });
+
+// describe('Videos', function() {
+//   it('should list ALL videos on /getmostrecentvideos GET', function(done) {
+//     this.timeout(20000);
+//     setTimeout(done, 20000);
+//     chai.request(server)
+//       .get('/getmostrecentvideos')
+//       .end(function(err, res){
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.should.be.a('array');
+//         done();
+//       });
+//   });
+//   it('should list ALL videos on /getvideos/:date GET', function(done) {
+//     this.timeout(20000);
+//     setTimeout(done, 20000);
+//     chai.request(server)
+//       .get('/getvideos/2020-02-22')
+//       .end(function(err, res){
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.should.be.a('array');
+//         done();
+//       });
+//   });
+//   // it('should DELETE SINGLE video on /deletevideorecord POST', function(done) {
+//   //   this.timeout(20000);
+//   //   setTimeout(done, 20000);
+//   //   chai.request(server)
+//   //     .post('/deletevideorecord')
+//   //     .send({ID: haloInfiniteID})
+//   //     .end(function(err, res){
+//   //       res.should.have.status(200);
+//   //       res.should.be.json;
+//   //       done();
+//   //     });
+//   // });
+// });

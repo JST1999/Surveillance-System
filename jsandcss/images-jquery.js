@@ -75,10 +75,7 @@ $(document).ready(function() {
             '<div class="media align-items-lg-center flex-column flex-lg-row p-3">' +
             '<div class="searchResultText" class="media-body order-2 order-lg-1">' +
             '<h5 class="mt-0 font-weight-bold mb-2">'+id+'</h5>' +
-            '<p class="font-italic text-muted mb-0 small">Hour-'+res[i].hour+' Date-'+res[i].day+'/'+res[i].month+'/'+res[i].year+' '+res[i].minute+':'+res[i].second+'.'+res[i].millisecond+'</p>' +
-            // '<div class="d-flex align-items-center justify-content-between mt-1">' +
-            // '<h6 class="font-weight-bold my-2">£'+res[i].price+'</h6>' + //could use this for ip
-            // '</div>' +
+            '<p class="font-italic text-muted mb-0 small">Date-'+res[i].day+'/'+res[i].month+'/'+res[i].year+' Time:'+res[i].hour+':'+res[i].minute+':'+res[i].second+'.'+res[i].millisecond+'</p>' +
             '</div>' +
             '<img class="searchResultImage" src="images/'+res[i].filename+'" alt="image not found" width="10000" class="ml-lg-5 order-1 order-lg-2">' +
             '</div>' +

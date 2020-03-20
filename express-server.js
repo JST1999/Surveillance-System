@@ -71,12 +71,7 @@ var Storage = multer.diskStorage({//used to help add images https://dzone.com/ar
 						"second": sec,
 						"millisecond": millisecond
 					});
-					Image.save().then((test) => {
-						res.status("200");
-						res.json({
-							message: "Added successfully"
-						});
-					});
+					Image.save();
 					callback(null, name);
 				});
 			}
@@ -102,7 +97,6 @@ var videoStorage = multer.diskStorage({
 	},
 	filename: function(req, file, callback) {
 		var name = file.originalname;
-		callback(null, name);
 
 		var sessionID = name.substring(0, 64);
 
@@ -118,6 +112,7 @@ var videoStorage = multer.diskStorage({
 		schemas.Session.findOne({"sessionID": sessionID}, function(err, sess) {
 			if (sess){// session found
 				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+					callback(null, name);
 
 					ffmpeg.ffprobe("./videos/"+name, function(err, metadata) {//e.g. './videos/sample_1.mp4'
 						if (err){
@@ -159,12 +154,7 @@ var videoStorage = multer.diskStorage({
 							}
 							Video.video_streams = video;
 
-							Video.save().then((test) => {
-								res.status("200");
-								res.json({
-									message: "Added successfully"
-								});
-							});
+							Video.save();
 
 							//console.dir(Video);
 							//console.dir(metadata);
@@ -359,22 +349,22 @@ app.post("/getmostrecent", function (req, res) {//gets most recent 50 images
 });
 
 app.post("/getmostrecentvideos", function (req, res) {//gets most recent 50 images
-	// schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
-	// 	if (sess){// session found
-	// 		schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
-	// 			var username = user.username;
-	// 			schemas.Image.find({"username": username}, function(err, images) {
-	// 				res.setHeader("Content-Type", "application/json");
-	// 				res.send(images);
-	// 			}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
-	// 		});
-	// 	} else{
-	// 		res.status("401");
-	// 		res.json({
-	// 			message: "Invalid Session ID"
-	// 		});
-	// 	}
-	// });
+	schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				var username = user.username;
+				schemas.Video.find({"username": username}, function(err, vids) {
+					res.setHeader("Content-Type", "application/json");
+					res.send(vids);
+				}).sort({_id:-1}).limit(50);//-1 is decending (newest to oldest)
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
+	});
 });
 
 // app.get("/getImages/:date", function (request, response) {//gets images from a certain date
@@ -415,28 +405,28 @@ app.post("/getImages/:date", function (req, res) {//gets images from a certain d
 });
 
 app.post("/getvideos/:date", function (req, res) {//gets images from a certain date
-	// schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
-	// 	if (sess){// session found
-	// 		schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
-	// 			var username = user.username;
-	// 			var str = req.params.date
-	// 			var arr = str.split('-');
-	// 			var year = arr[0];
-	// 			var month = arr[1];
-	// 			var day = arr[2];
+	schemas.Session.findOne({"sessionID": req.body.sessionID}, function(err, sess) {
+		if (sess){// session found
+			schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
+				var username = user.username;
+				var str = req.params.date
+				var arr = str.split('-');
+				var year = arr[0];
+				var month = arr[1];
+				var day = arr[2];
 				
-	// 			schemas.Image.find({"username": username, "year": year, "month": month, "day": day}, function(err, images) {
-	// 				res.setHeader("Content-Type", "application/json");
-	// 				res.send(images);
-	// 			});
-	// 		});
-	// 	} else{
-	// 		res.status("401");
-	// 		res.json({
-	// 			message: "Invalid Session ID"
-	// 		});
-	// 	}
-	// });
+				schemas.Video.find({"username": username, "year": year, "month": month, "day": day}, function(err, vids) {
+					res.setHeader("Content-Type", "application/json");
+					res.send(vids);
+				});
+			});
+		} else{
+			res.status("401");
+			res.json({
+				message: "Invalid Session ID"
+			});
+		}
+	});
 });
 
 
@@ -616,6 +606,19 @@ app.post('/fpnewpass', function(req, res){
 
 app.post("/deleteimagerecord", function(req, res){
 	schemas.Image.deleteOne({"_id": req.body.ID}, function(err, img) {
+		if (err){
+			res.status("500");
+			throw err;
+		}
+		res.status("200");
+		res.json({
+			message: "Deleted successfully"
+		});
+	});
+});
+
+app.post("/deletevideorecord", function(req, res){
+	schemas.Video.deleteOne({"_id": req.body.ID}, function(err, vid) {
 		if (err){
 			res.status("500");
 			throw err;
