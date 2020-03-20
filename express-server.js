@@ -117,7 +117,7 @@ var videoStorage = multer.diskStorage({
 					callback(null, name);
 
 					ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
-						if (err) console.log("Path was not found");
+						if (err) throw err
 						
 						var Video = new schemas.Video({
 							"username": user.username,
