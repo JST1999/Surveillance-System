@@ -45,10 +45,9 @@ var Video = mongoose.model("Video", {//videos in database
 	second: Number,
 	millisecond: Number,
 	filename: String,
-	duration: Number,
-	size: Number,
 	video_streams: [
 		{
+			duration: Number,
 			bitrate: Number,
 			fps: Number,
 			resolution: String

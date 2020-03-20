@@ -73,7 +73,7 @@ $(document).ready(function() {
             '<div class="searchResultText" class="media-body order-2 order-lg-1">' +
             '<h5 class="mt-0 font-weight-bold mb-2">'+id+'</h5>' +
             '<p class="font-italic text-muted mb-0 small">Date-'+res[i].day+'/'+res[i].month+'/'+res[i].year+' Time:'+res[i].hour+':'+res[i].minute+':'+res[i].second+'.'+res[i].millisecond+'</p>' +
-            '<p class="font-italic text-muted mb-0 small">Duration:'+res[i].duration+' Size:'+res[i].size+' Resolution:'+res[i].video_streams[0].resolution+' FPS:'+res[i].video_streams[0].fps+' Bitrate'+res[i].video_streams[0].bitrate+'</p>' +
+            '<p class="font-italic text-muted mb-0 small">Duration(Seconds):'+res[i].video_streams[0].duration+' Resolution:'+res[i].video_streams[0].resolution+' FPS:'+res[i].video_streams[0].fps+' Bitrate'+res[i].video_streams[0].bitrate+'</p>' +
             '</div>' +
             '<video class="searchResultImage" width="100%" class="ml-lg-5 order-1 order-lg-2" controls><source src='+res[i].filename+' type="video/mp4"></video>'+
             '</div>' +

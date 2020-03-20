@@ -27,8 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname));
 
-var ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfprobePath("./ffprobe.exe");
+// var ffmpeg = require('fluent-ffmpeg');
+// ffmpeg.setFfprobePath("./ffprobe.exe");
+
+var ffprobe = require("ffprobe"), ffprobeStatic = require("ffprobe-static");
 
 //one of my fav parts, this is a part for sending emails
 var nodemailer = require('nodemailer');
@@ -114,72 +116,51 @@ var videoStorage = multer.diskStorage({
 				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
 					callback(null, name);
 
-					ffmpeg.ffprobe("./videos/"+name, function(err, metadata) {//e.g. './videos/sample_1.mp4'
-						if (err){//incase ffprobe doesnt work
-							console.log("Path was not found");
-							var Video = new schemas.Video({
-								"username": user.username,
-								"year": year,
-								"month": month,
-								"day": day,
-								"hour": hour,
-								"minute": min,
-								"second": sec,
-								"millisecond": millisecond,
-								"filename": "./videos/"+name,
-								"duration": 0,
-								"size": 0,
-								"video_streams": [
-									{
-										"bitrate": 0,
-										"fps": 0,
-										"resolution": "Not available"
-									}
-								]
-							});
-						} else{
-							var Video = new schemas.Video({
-								"username": user.username,
-								"year": year,
-								"month": month,
-								"day": day,
-								"hour": hour,
-								"minute": min,
-								"second": sec,
-								"millisecond": millisecond,
-								"filename": metadata["format"]["filename"],
-								"duration": metadata["format"]["duration"],
-								"size": metadata["format"]["size"],
-								"video_streams": [
-									{
-										"bitrate": "[bitrate]",
-										"fps":"[frames_per_second]",
-										"resolution":"[resolution]"
-									}
-								]
-							});
-							
-							var video = [];
-							for (i = 0; i < metadata["streams"]["length"]; i++){
-								if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
-									var str = metadata["streams"][i]["avg_frame_rate"];
-									var arr = str.split('/');
-									var fps = arr[0] / arr[1];
-									video = video.concat({
-										bitrate: metadata["streams"][i]["bit_rate"],
-										fps: fps,
-										resolution: metadata["streams"][i]["width"]+"x"+metadata["streams"][i]["height"]
-									});
+					ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
+						if (err) console.log("Path was not found");
+						
+						var Video = new schemas.Video({
+							"username": user.username,
+							"year": year,
+							"month": month,
+							"day": day,
+							"hour": hour,
+							"minute": min,
+							"second": sec,
+							"millisecond": millisecond,
+							"filename": "./videos/"+name,
+							"video_streams": [
+								{
+									"duration": "[duration]",
+									"bitrate": "[bitrate]",
+									"fps":	"[frames_per_second]",
+									"resolution":	"[resolution]"
 								}
+							]
+						});
+						
+						var video = [];
+						for (i = 0; i < metadata["streams"]["length"]; i++){
+							if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
+								var str = metadata["streams"][i]["avg_frame_rate"];
+								var arr = str.split('/');
+								var fps = arr[0] / arr[1];
+								video = video.concat({
+									duration: metadata["streams"][i]["duration"],
+									bitrate: metadata["streams"][i]["bit_rate"],
+									fps: fps,
+									resolution: metadata["streams"][i]["width"]+"x"+metadata["streams"][i]["height"]
+								});
 							}
-							Video.video_streams = video;
-
-							Video.save();
-
-							//console.dir(Video);
-							//console.dir(metadata);
 						}
+						Video.video_streams = video;
+	
+						Video.save();
+	
+						//console.dir(Video);
+						//console.dir(metadata);
 					});
+
 
 				});
 			}
