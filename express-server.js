@@ -115,6 +115,7 @@ var videoStorage = multer.diskStorage({
 					callback(null, name);
 
 					ffmpeg.ffprobe("./videos/"+name, function(err, metadata) {//e.g. './videos/sample_1.mp4'
+						console.log(name);
 						if (err){
 							console.log("Path was not found");
 						} else{
