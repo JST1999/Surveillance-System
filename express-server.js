@@ -115,9 +115,28 @@ var videoStorage = multer.diskStorage({
 					callback(null, name);
 
 					ffmpeg.ffprobe("./videos/"+name, function(err, metadata) {//e.g. './videos/sample_1.mp4'
-						console.log(name);
-						if (err){
+						if (err){//incase ffprobe doesnt work
 							console.log("Path was not found");
+							var Video = new schemas.Video({
+								"username": user.username,
+								"year": year,
+								"month": month,
+								"day": day,
+								"hour": hour,
+								"minute": min,
+								"second": sec,
+								"millisecond": millisecond,
+								"filename": "./videos/"+name,
+								"duration": 0,
+								"size": 0,
+								"video_streams": [
+									{
+										"bitrate": 0,
+										"fps": 0,
+										"resolution": "Not available"
+									}
+								]
+							});
 						} else{
 							var Video = new schemas.Video({
 								"username": user.username,
