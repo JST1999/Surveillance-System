@@ -121,7 +121,7 @@ var videoStorage = multer.diskStorage({
 				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
 					callback(null, name);
 					
-					if (hostname != "c9e88e4e-96e1-48a4-93b5-bb58b07de1ad"){//heroku hostname for my app
+					if (tmpdir != "/tmp"){//if not heroku
 						ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
 							var Video = new schemas.Video({
 								"username": user.username,
