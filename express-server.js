@@ -120,29 +120,29 @@ var videoStorage = multer.diskStorage({
 			if (sess){// session found
 				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
 					callback(null, name);
+
+					var Video = new schemas.Video({
+						"username": user.username,
+						"year": year,
+						"month": month,
+						"day": day,
+						"hour": hour,
+						"minute": min,
+						"second": sec,
+						"millisecond": millisecond,
+						"filename": "./videos/"+name,
+						"video_streams": [
+							{
+								"duration": "[duration]",
+								"bitrate": "[bitrate]",
+								"fps":	"[frames_per_second]",
+								"resolution":	"[resolution]"
+							}
+						]
+					});
 					
 					if (tmpdir != "/tmp"){//if not heroku
-						ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
-							var Video = new schemas.Video({
-								"username": user.username,
-								"year": year,
-								"month": month,
-								"day": day,
-								"hour": hour,
-								"minute": min,
-								"second": sec,
-								"millisecond": millisecond,
-								"filename": "./videos/"+name,
-								"video_streams": [
-									{
-										"duration": "[duration]",
-										"bitrate": "[bitrate]",
-										"fps":	"[frames_per_second]",
-										"resolution":	"[resolution]"
-									}
-								]
-							});
-							
+						ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {				
 							var video = [];
 							for (i = 0; i < metadata["streams"]["length"]; i++){
 								if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
@@ -165,25 +165,6 @@ var videoStorage = multer.diskStorage({
 							//console.dir(metadata);
 						});
 					} else{
-						var Video = new schemas.Video({
-							"username": user.username,
-							"year": year,
-							"month": month,
-							"day": day,
-							"hour": hour,
-							"minute": min,
-							"second": sec,
-							"millisecond": millisecond,
-							"filename": "./videos/"+name,
-							"video_streams": [
-								{
-									"duration": "[duration]",
-									"bitrate": "[bitrate]",
-									"fps":	"[frames_per_second]",
-									"resolution":	"[resolution]"
-								}
-							]
-						});
 						Video.save();
 					}
 				});
