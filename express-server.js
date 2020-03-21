@@ -29,6 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname));
 
+var tmpdir;
+var hostname;
+
 // var ffmpeg = require('fluent-ffmpeg');
 // ffmpeg.setFfprobePath("./ffprobe.exe");
 
@@ -118,7 +121,50 @@ var videoStorage = multer.diskStorage({
 				schemas.Admin.findOne({"_id": sess.userID}, function(err, user) {//get user
 					callback(null, name);
 					
-					ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
+					if (hostname != "c9e88e4e-96e1-48a4-93b5-bb58b07de1ad"){//heroku hostname for my app
+						ffprobe("./videos/"+name, { path: ffprobeStatic.path }, function (err, metadata) {
+							var Video = new schemas.Video({
+								"username": user.username,
+								"year": year,
+								"month": month,
+								"day": day,
+								"hour": hour,
+								"minute": min,
+								"second": sec,
+								"millisecond": millisecond,
+								"filename": "./videos/"+name,
+								"video_streams": [
+									{
+										"duration": "[duration]",
+										"bitrate": "[bitrate]",
+										"fps":	"[frames_per_second]",
+										"resolution":	"[resolution]"
+									}
+								]
+							});
+							
+							var video = [];
+							for (i = 0; i < metadata["streams"]["length"]; i++){
+								if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
+									var str = metadata["streams"][i]["avg_frame_rate"];
+									var arr = str.split('/');
+									var fps = arr[0] / arr[1];
+									video = video.concat({
+										duration: metadata["streams"][i]["duration"],
+										bitrate: metadata["streams"][i]["bit_rate"],
+										fps: fps,
+										resolution: metadata["streams"][i]["width"]+"x"+metadata["streams"][i]["height"]
+									});
+								}
+							}
+							Video.video_streams = video;
+		
+							Video.save();
+		
+							//console.dir(Video);
+							//console.dir(metadata);
+						});
+					} else{
 						var Video = new schemas.Video({
 							"username": user.username,
 							"year": year,
@@ -138,29 +184,8 @@ var videoStorage = multer.diskStorage({
 								}
 							]
 						});
-						
-						var video = [];
-						for (i = 0; i < metadata["streams"]["length"]; i++){
-							if (metadata["streams"][i]["codec_type"] === "video"){//there should be only one stream, which would be a video one but ive just got this to check to make sure
-								var str = metadata["streams"][i]["avg_frame_rate"];
-								var arr = str.split('/');
-								var fps = arr[0] / arr[1];
-								video = video.concat({
-									duration: metadata["streams"][i]["duration"],
-									bitrate: metadata["streams"][i]["bit_rate"],
-									fps: fps,
-									resolution: metadata["streams"][i]["width"]+"x"+metadata["streams"][i]["height"]
-								});
-							}
-						}
-						Video.video_streams = video;
-	
 						Video.save();
-	
-						//console.dir(Video);
-						//console.dir(metadata);
-					});
-
+					}
 				});
 			}
 		});
@@ -690,9 +715,9 @@ app.get("/", function(request, response) {
 app.listen(port, function() {
 	mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then((test) => {
 		console.log("Connected to DB");
-		var tmpdir = os.tmpdir();
+		tmpdir = os.tmpdir();
 		console.log(tmpdir);
-		var hostname = os.hostname();
+		hostname = os.hostname();
 		console.log(hostname);
 	});
 	console.log("Listening...");
