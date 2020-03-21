@@ -695,11 +695,11 @@ app.get("/", function(request, response) {
 // Run the server.
 app.listen(port, function() {
 	mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}).then((test) => {
-		console.log("Connected to DB");
 		tmpdir = os.tmpdir();
 		console.log(tmpdir);
 		hostname = os.hostname();
 		console.log(hostname);
+		console.log("Connected to DB");
 	});
 	console.log("Listening...");
 })
