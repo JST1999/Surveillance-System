@@ -54,6 +54,35 @@ def login():
             print("Something went wrong, try again")
 
 
+#this section is the login section, with pre-entered login details
+def login_from_sign_up(username, password):
+    url = "https://surv-system.herokuapp.com/adminlogin"
+    while True:
+        data = {
+            "username":username,
+            "password":password
+        }
+        
+        try:
+            r = requests.post(url, data=data)
+        except:
+            print("Network error: server or your connection may be down")
+        status = r.status_code
+        if status == 200:
+            json = r.json()
+            sessionID = json["message"]
+            
+            sessionFile = open("sessionID.txt", 'w')#the w method will overwrite the previous value, whereas r+ doesn't
+            sessionFile.write(sessionID)#non-volatile storage of session ID
+            sessionFile.close()#saves changes
+            
+            return sessionID
+        elif status == 401:
+            print("Invalid login credentials")
+        else:
+            print("Something went wrong, try again")
+
+
 #logs out a user
 def logout(sessionID):
     open("sessionID.txt", 'w').close()#the open('w') opens and deletes everything in the file. close() saves it and closes it
@@ -73,6 +102,46 @@ def logout(sessionID):
         print("Logged-out. Login below:")
     except:
         print("Network error: server or your connection may be down")
+        
+        
+def sign_up():
+    url = "https://surv-system.herokuapp.com/signup"
+    while True:
+        email = input("Email:")
+        password = input("Password:")
+        conPassword = input("Confirm Password:")
+        firstname = input("Firstname:")
+        lastname = input("Lastname:")
+        username = input("Username:")
+        
+        if len(email) == 0 or len(password) == 0 or len(conPassword) == 0 or len(firstname) == 0 or len(lastname) == 0 or len(username) == 0:
+            print("Some inputs are empty")
+        else:
+            if password != conPassword:
+                print("Passwords don't match")
+            else:
+                print("Creating...")
+                
+                data = {
+                    "firstname":firstname,
+                    "lastname":lastname,
+                    "email":email,
+                    "password":password,
+                    "username":username
+                }
+                
+                try:
+                    r = requests.post(url, data=data)
+                except:
+                    print("Network error: server or your connection may be down")
+                status = r.status_code
+                if status == 200:
+                    print("Account created")
+                    return login_from_sign_up(username, password)
+                elif status == 401:
+                    print("Invalid login credentials")
+                else:
+                    print("Something went wrong, try again")
 
 
 #this section is the one that checks the IR sensor and takes a picture, also post reqs it
@@ -230,8 +299,13 @@ while True:
         if imageMode == True:
             print("Image mode")
             if not sessID:#if sessID is empty
-                print("No sessionID was found. Login below:")
-                main(login())
+                answer = input("No sessionID was found. 0 to login | 1 to create account:")
+                if answer == '0':
+                    main(login())
+                elif answer == '1':
+                    main(sign_up())
+                else:
+                    print("Invalid input")
             else:
                 answer = input("SessionID was found. Continue with current session ID(Y or N):")
                 answer = answer.upper()
@@ -245,8 +319,13 @@ while True:
         else:
             print("Video mode")
             if not sessID:#if sessID is empty
-                print("No sessionID was found. Login below:")
-                main_video(login())
+                answer = input("No sessionID was found. 0 to login | 1 to create account:")
+                if answer == '0':
+                    main_video(login())
+                elif answer == '1':
+                    main_video(sign_up())
+                else:
+                    print("Invalid input")
             else:
                 answer = input("SessionID was found. Continue with current session ID(Y or N):")
                 answer = answer.upper()
