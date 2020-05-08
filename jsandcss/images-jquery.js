@@ -42,18 +42,6 @@ $(document).ready(function() {
             
         });
     });
-    $("#logoutBTNslicknav").click( function(e){
-        e.preventDefault();
-        var uri = protocol+url+"/logout";
-        $.post(uri, {
-            sessionID: sessionID
-        }, function(data, status) {
-            Cookies.remove('adminSessionID');
-            window.location.replace("./");
-        }).fail(function(xhr, status, error) {
-           
-        });
-    });
 
 
     function getMostRecent(){  //gets the url and does a get request

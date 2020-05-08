@@ -37,7 +37,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#loginBTN").click( function(){
+    function loginForm(){
         var username = $("#usernameLI").val();
         var password = $("#passwordLI").val();
 
@@ -47,9 +47,18 @@ $(document).ready(function() {
             $("#loginFormOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
             login(username, password);
         }
+    }
+    $("#loginBTN").click( function(){
+        loginForm();
+    });
+    $("#passwordLI").on('keypress',function(e) {
+        if(e.which == 13) {
+            loginForm();
+        }
     });
 
-    $("#FUBTN").click(function(){
+
+    function forgotUsername(){
         var email = $("#emailFU").val();
 
         if(email.length === 0){
@@ -69,9 +78,18 @@ $(document).ready(function() {
                 $("#FUsernameOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
             }
         }
+    }
+    $("#FUBTN").click(function(){
+        forgotUsername();
+    });
+    $("#emailFU").on('keypress',function(e) {
+        if(e.which == 13) {
+            forgotUsername();
+        }
     });
 
-    $("#FPBTN").click(function(){
+
+    function forgotPassword(){
         var email = $("#emailFP").val();
         var username = $("#usernameFP").val();
 
@@ -93,9 +111,60 @@ $(document).ready(function() {
                 $("#FPasswordOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
             }
         }
+    }
+    $("#FPBTN").click(function(){
+        forgotPassword();
+    });
+    $("#usernameFP").on('keypress',function(e) {
+        if(e.which == 13) {
+            forgotPassword();
+        }
     });
 
+    
+    function signUp(){
+        var email = $("#emailSU").val();
+        var password = $("#passwordSU").val();
+        var conPassword = $("#confirmPasswordSU").val();
+        var firstname = $("#firstnameSU").val();
+        var lastname = $("#lastnameSU").val();
+        var username = $("#usernameSU").val();
+
+        if(email.length === 0 || password.length === 0 || conPassword.length === 0 || firstname.length === 0 || lastname.length === 0){
+            $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
+        } else{
+            if(password != conPassword){
+                $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Passwords don't match</p>");
+            } else{
+                if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === false){
+                    $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
+                } else{
+                    $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
+                    var uri = protocol+url+"/signup";
+                    $.post(uri, { 
+                        firstname: firstname,
+                        lastname: lastname,
+                        email: email,
+                        password: password,
+                        username: username
+                    }, function(data, status) { 
+                        $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>"+data.message+"</p>");
+                        login(username, password);
+                    }).fail(function(xhr, status, error) {
+                        $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Email or username is already in use</p>");
+                    });
+                }
+            }
+        }
+    }
+    $("#signUpBTN").click( function(){
+        signUp();
+    });
     $("#passwordSU").keyup(function(){
+        if(e.which == 13) {
+            signUp();
+        }
+
         var password = $("#passwordSU").val();
         
         emojiEmotion = {
@@ -134,39 +203,4 @@ $(document).ready(function() {
         }
     });
 
-    $("#signUpBTN").click( function(){
-        var email = $("#emailSU").val();
-        var password = $("#passwordSU").val();
-        var conPassword = $("#confirmPasswordSU").val();
-        var firstname = $("#firstnameSU").val();
-        var lastname = $("#lastnameSU").val();
-        var username = $("#usernameSU").val();
-
-        if(email.length === 0 || password.length === 0 || conPassword.length === 0 || firstname.length === 0 || lastname.length === 0){
-            $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>All inputs need to be filled in</p>");
-        } else{
-            if(password != conPassword){
-                $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Passwords don't match</p>");
-            } else{
-                if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === false){
-                    $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Invalid email</p>");
-                } else{
-                    $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Waiting</p>");
-                    var uri = protocol+url+"/signup";
-                    $.post(uri, { 
-                        firstname: firstname,
-                        lastname: lastname,
-                        email: email,
-                        password: password,
-                        username: username
-                    }, function(data, status) { 
-                        $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>"+data.message+"</p>");
-                        login(username, password);
-                    }).fail(function(xhr, status, error) {
-                        $("#signUpOutput").html("<p id='outputText' style='color: #ffa500;'>Email or username is already in use</p>");
-                    });
-                }
-            }
-        }
-    });
 });
