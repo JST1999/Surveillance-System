@@ -16,10 +16,6 @@ camera.hflip = True
 camera.exposure_mode = "sports"#faster shutter speed so less motion blur
 camera.resolution = (1920, 1080)#1080p
 
-sessionFile = open("sessionID.txt", 'r+')
-sessID = sessionFile.read()#used to give each pic its own unique name
-sessionFile.close()
-
 
 #this section is the login section, it will retrieve a session ID
 def login():
@@ -284,6 +280,10 @@ def image_mode():
 
 
 while True:
+    sessionFile = open("sessionID.txt", 'r+')
+    sessID = sessionFile.read()#used to give each pic its own unique name
+    sessionFile.close()
+    
     onOrOff = input("0 for offline | 1 for online:")
     if onOrOff == "0":#as a string, there will be no need for try except in case the value cant be converted to an int e.g. int("a")
         imageMode = image_mode()
@@ -312,7 +312,7 @@ while True:
                     main(sessID)
                 elif answer == 'N':
                     logout(sessID)
-                    main(login())
+                    continue
                 else:
                     print("Invalid input")
         else:
@@ -332,7 +332,7 @@ while True:
                     main_video(sessID)
                 elif answer == 'N':
                     logout(sessID)
-                    main_video(login())
+                    continue
                 else:
                     print("Invalid input")
     else:
