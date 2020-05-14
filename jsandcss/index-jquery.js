@@ -160,11 +160,12 @@ $(document).ready(function() {
     $("#signUpBTN").click( function(){
         signUp();
     });
-    $("#passwordSU").keyup(function(){
+    $("#usernameSU").on('keypress',function(e) {
         if(e.which == 13) {
             signUp();
         }
-
+    });
+    $("#passwordSU").keyup(function(){
         var password = $("#passwordSU").val();
         
         emojiEmotion = {
